@@ -66,9 +66,9 @@ function insertCustomBlock() {
         <!-- Row 1: Selector -->
         <div class="custom-row">
             <select id="selector1">
+                <option value="" selected disabled>Select an option</option>
                 <option value="artist">Artist</option>
                 <option value="label">Label</option>
-                <!-- Add more options as needed -->
             </select>
         </div>
         <!-- Row 2: Input -->
@@ -78,9 +78,9 @@ function insertCustomBlock() {
         <!-- Row 3: Selector -->
         <div class="custom-row">
             <select id="selector2">
+                <option value="" selected disabled>Select an option</option>
                 <option value="yes">Yes</option>
                 <option value="no">No</option>
-                <!-- Add more options as needed -->
             </select>
         </div>
     </div>
