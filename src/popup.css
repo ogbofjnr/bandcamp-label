@@ -1,0 +1,17 @@
+/* popup.css */
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 15cm;   /* Width of the popup */
+    height: 15cm;  /* Height of the popup */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  #syncButton {
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  
