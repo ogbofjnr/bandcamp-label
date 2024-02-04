@@ -11,7 +11,7 @@
     "*://*/*"
   ],
   "action": {
-    "default_title": "Bandcamp Artist",
+    "default_title": "Bandcamp label",
     "default_popup": "popup.html" 
   },
   "content_scripts": [

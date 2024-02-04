@@ -1,9 +1,8 @@
 var selectorStates = {
-    type: "", // "artist" or "label"
+    type: "", 
     genre: "",
-    is_subscribed: "" // "yes" or "no"
+    is_subscribed: "" 
 };
-
 
 function insertCustomBlock() {
     console.log('Attempting to insert custom block');
