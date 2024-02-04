@@ -67,16 +67,15 @@ function insertCustomBlock() {
         fetchSelectorStates();
         
         $('#selector1, #selector2, #genreSelector').change(function() {
-            // Update the selectorStates object based on changes
-            selectorStates['artist'] = $('#selector1').val() === 'artist';
-            selectorStates['label'] = $('#selector1').val() === 'label';
-            selectorStates['yes'] = $('#selector2').val() === 'yes';
-            selectorStates['no'] = $('#selector2').val() === 'no';
-            selectorStates['genre'] = $('#genreSelector').val();
-            
+            // Directly update the selectorStates object based on the changes
+            selectorStates.type = $('#selector1').val(); // 'artist' or 'label'
+            selectorStates.is_subscribed = $('#selector2').val(); // 'yes' or 'no'
+            selectorStates.genre = $('#genreSelector').val();
+        
             // Save the updated states
             saveSelectorStates();
         });
+        
     } else {
         console.log('Target element not found. Ensure the page has the correct structure.');
     }
