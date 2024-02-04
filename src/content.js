@@ -66,20 +66,20 @@ function insertCustomBlock() {
         <!-- Row 1: Selector -->
         <div class="custom-row">
             <select id="selector1">
-                <option value="option1">Option 1</option>
-                <option value="option2">Option 2</option>
+                <option value="artist">Artist</option>
+                <option value="label">Label</option>
                 <!-- Add more options as needed -->
             </select>
         </div>
         <!-- Row 2: Input -->
         <div class="custom-row">
-            <input type="text" id="input1" placeholder="Enter some text">
+            <input type="text" id="input1" placeholder="Genre">
         </div>
         <!-- Row 3: Selector -->
         <div class="custom-row">
             <select id="selector2">
-                <option value="option1">Option 1</option>
-                <option value="option2">Option 2</option>
+                <option value="yes">Yes</option>
+                <option value="no">No</option>
                 <!-- Add more options as needed -->
             </select>
         </div>
@@ -96,7 +96,8 @@ function insertCustomBlock() {
             margin: 0; /* Removes default margin */
             border: 1px solid #ccc; /* Optional: Adds a border */
         }
-    </style>        
+    </style>
+           
         `;
         console.log('Custom block created:', customBlock);
 
