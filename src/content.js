@@ -85,7 +85,7 @@ function fetchSelectorStates() {
     const baseUrl = window.location.href.match(/^(https?:\/\/[^\/]+\.com)/)[0];
 
     $.ajax({
-        url: 'http://localhost:8092/get',
+        url: 'http://localhost:8092/artist/get',
         type: 'POST',
         contentType: 'application/json',
         data: JSON.stringify({
@@ -118,7 +118,7 @@ function saveSelectorStates() {
     };
 
     $.ajax({
-        url: 'http://localhost:8092/save',
+        url: 'http://localhost:8092/artist/save',
         type: 'POST',
         contentType: 'application/json',
         data: JSON.stringify(dbModel),
