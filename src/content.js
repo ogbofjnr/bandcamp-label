@@ -47,6 +47,9 @@ function insertCustomBlock() {
         <div class="custom-row">
             <button id="syncAlbumsButton">Sync albums</button>
         </div>
+        <div class="custom-row">
+            <button id="fetchSupporters">Fetch profiles</button>
+        </div>
         <style>
             .custom-row {
                 margin-bottom: 10px; /* Space out each row */
@@ -89,6 +92,9 @@ function insertCustomBlock() {
             console.log(albumsData);
         });
 
+        $('#fetchSupporters').click(function () {
+            saveSupportersBatch()
+        }); 
     } else {
         console.log('Target element not found. Ensure the page has the correct structure.');
     }
@@ -208,5 +214,34 @@ function saveAlbumsBatch(albumsData) {
         }
     });
 }
+
+
+function saveSupportersBatch() {
+    const supporterLinks = document.querySelectorAll('.no-writing .fan.pic');
+    // Извлечь информацию каждого поддерживающего и сохранить в массив
+    const supporters = Array.from(supporterLinks).map(link => {
+        const bandcamp_url = link.getAttribute('href');
+        return { bandcamp_url };
+    });
+
+    // Формируем данные для отправки
+    const dataToSend = {
+        profiles: supporters
+    };
+
+    $.ajax({
+        url: 'http://localhost:8092/fun-profile/save-batch',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(dataToSend),
+        success: function (response) {
+            console.log('Supporters data saved successfully:', response);
+        },
+        error: function (xhr, status, error) {
+            console.error('Error saving supporters data:', error);
+        }
+    });
+}
+
 
 insertCustomBlock();
