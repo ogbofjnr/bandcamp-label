@@ -27,8 +27,8 @@ function simulateMouseScroll() {
             window.scrollBy({ top: 1000 });
             if (window.scrollY === lastScrollY) {
                 sameScrollCount++;
-                if (sameScrollCount >= 50) { // Adjust based on your needs
-                    console.log('Scrolling stopped, position unchanged for 50 consecutive checks.');
+                if (sameScrollCount >= 15) { // Adjust based on your needs
+                    console.log('Scrolling stopped, position unchanged for 15 consecutive checks.');
                     clearInterval(scrollInterval);
                     resolve(); // Scrolling finished, resolve the Promise
                 }

@@ -208,15 +208,19 @@ function saveAlbumsBatch(albumsData) {
         data: JSON.stringify(dataToSend),
         success: function (response) {
             console.log('Albums data saved successfully:', response);
+            window.alert("successfully loaded " + albumsData.length + " albums")
+
         },
         error: function (xhr, status, error) {
             console.error('Error saving albums data:', error);
+            window.alert("error loading labels " + error)
         }
     });
 }
 
 
-function saveSupportersBatch() {
+async function saveSupportersBatch() {
+    await clickMoreThumbsUntilDone()
     const supporterLinks = document.querySelectorAll('.no-writing .fan.pic');
     // Извлечь информацию каждого поддерживающего и сохранить в массив
     const supporters = Array.from(supporterLinks).map(link => {
@@ -236,11 +240,36 @@ function saveSupportersBatch() {
         data: JSON.stringify(dataToSend),
         success: function (response) {
             console.log('Supporters data saved successfully:', response);
+            window.alert("successfully loaded " + supporters.length + " supporters")
+
         },
         error: function (xhr, status, error) {
             console.error('Error saving supporters data:', error);
+            window.alert("error loading supporters " + error)
+
         }
     });
+}
+
+async function clickMoreThumbsUntilDone() {
+    // Найти кнопку "more..."
+    const moreButton = document.querySelector('a.more-thumbs');
+
+    // Функция для проверки и клика по кнопке
+    async function clickAndCheck() {
+        // Проверяем, видима ли кнопка "more..."
+        if (moreButton && getComputedStyle(moreButton).display !== 'none') {
+            // Кликаем по кнопке
+            moreButton.click();
+            await delay(2000)
+            await clickAndCheck();
+        } else {
+            console.log('No more items to load or button is not visible');
+        }
+    }
+
+    // Начать процесс
+   await  clickAndCheck();
 }
 
 
