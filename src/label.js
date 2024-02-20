@@ -48,7 +48,7 @@ function insertCustomBlock() {
             <button id="syncAlbumsButton">Sync albums</button>
         </div>
         <div class="custom-row">
-            <button id="fetchSupporters">Fetch profiles</button>
+            <button id="fetchUsers">Fetch profiles</button>
         </div>
         <style>
             .custom-row {
@@ -92,8 +92,8 @@ function insertCustomBlock() {
             console.log(albumsData);
         });
 
-        $('#fetchSupporters').click(function () {
-            saveSupportersBatch()
+        $('#fetchUsers').click(function () {
+            saveUsersBatch()
         }); 
     } else {
         console.log('Target element not found. Ensure the page has the correct structure.');
@@ -219,18 +219,18 @@ function saveAlbumsBatch(albumsData) {
 }
 
 
-async function saveSupportersBatch() {
+async function saveUsersBatch() {
     await clickMoreThumbsUntilDone()
-    const supporterLinks = document.querySelectorAll('.no-writing .fan.pic');
+    const userLinks = document.querySelectorAll('.no-writing .fan.pic');
     // Извлечь информацию каждого поддерживающего и сохранить в массив
-    const supporters = Array.from(supporterLinks).map(link => {
+    const users = Array.from(userLinks).map(link => {
         const bandcamp_url = link.getAttribute('href');
         return { bandcamp_url };
     });
 
     // Формируем данные для отправки
     const dataToSend = {
-        profiles: supporters
+        profiles: users
     };
 
     $.ajax({
@@ -239,13 +239,13 @@ async function saveSupportersBatch() {
         contentType: 'application/json',
         data: JSON.stringify(dataToSend),
         success: function (response) {
-            console.log('Supporters data saved successfully:', response);
-            window.alert("successfully loaded " + supporters.length + " supporters")
+            console.log('Users data saved successfully:', response);
+            window.alert("successfully loaded " + users.length + " users")
 
         },
         error: function (xhr, status, error) {
-            console.error('Error saving supporters data:', error);
-            window.alert("error loading supporters " + error)
+            console.error('Error saving users data:', error);
+            window.alert("error loading users " + error)
 
         }
     });

@@ -124,13 +124,13 @@ async function saveArtistsInBulk(labels) {
         bandcamp_url: label.labelURL, // Map 'labelURL' to 'bandcamp_url'
     }));
 
-    const profile_url = window.location.href.split('/', 4).join('/');
+    const user_url = window.location.href.split('/', 4).join('/');
 
     // Constructing the JSON payload to send
-    let payload = JSON.stringify({ artists: dbModels, profile_url:profile_url });
+    let payload = JSON.stringify({ artists: dbModels, user_url: user_url });
 
     $.ajax({
-        url: 'http://localhost:8092/artist/save-batch-from-supporter', // Adjusted to the bulk save endpoint
+        url: 'http://localhost:8092/artist/save-batch-from-user', // Adjusted to the bulk save endpoint
         type: 'POST',
         contentType: 'application/json',
         data: payload,
