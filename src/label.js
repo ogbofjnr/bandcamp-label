@@ -10,6 +10,11 @@ function insertCustomBlock() {
     let target = document.querySelector('.artists-bio-pic.artists-bio-pic-uploaded.landscape');
     console.log('Querying for .artists-bio-pic.artists-bio-pic-uploaded.landscape');
 
+    if (!target){
+        target = document.querySelector('.artists-bio-pic.artists-bio-pic-uploaded.portrait');
+        console.log('Querying for .artists-bio-pic.artists-bio-pic-uploaded.portrait');
+    }
+
     if (target) {
         console.log('Target element found:', target);
 
