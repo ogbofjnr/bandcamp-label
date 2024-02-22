@@ -210,7 +210,7 @@ function getURL(){
     const currentUrl = window.location.href;
     const artistBandcampUrl = currentUrl.split("/")[2]; // Получаем часть до первого "/"
     const baseUrl = artistBandcampUrl.includes('.com') ? artistBandcampUrl.split('.com')[0] + '.com' : artistBandcampUrl;
-    return `https://${baseUrl}/`
+    return `https://${baseUrl}`
 }
 
 function saveAlbumsBatch(albumsData) {
@@ -251,7 +251,8 @@ async function saveUsersBatch() {
 
     // Формируем данные для отправки
     const dataToSend = {
-        profiles: users
+        users: users,
+        album_url: window.location.href,
     };
 
     $.ajax({

@@ -71,7 +71,7 @@ function getURL() {
     const currentUrl = window.location.href;
     const bandcampUrl = currentUrl.split("/")[2]; // Получаем часть до первого "/"
     const baseUrl = bandcampUrl.includes('.com') ? bandcampUrl.split('.com')[0] + '.com' : bandcampUrl;
-    return `https://${baseUrl}/`
+    return `https://${baseUrl}`
 }
 
 async function loadLabels() {
