@@ -86,32 +86,39 @@ function insertCustomBlock() {
             // Save the updated states
             saveSelectorStates();
         });
-        $('#syncAlbumsButton').click(function () {
+        $('#syncAlbumsButton').click(async function () {
             try {
                 const albumsData = parseAlbumsData();
-                saveAlbumsBatch(albumsData);
+                response = await saveAlbumsBatch(albumsData);
                 console.log(albumsData);
-        
-                artist_url=getURL()
-                document.dispatchEvent(new CustomEvent('syncArtistSuccess', { detail: { artist_url } }));
+                artist_url = getURL()
+                console.log('Albums data saved successfully:', response);
+                window.alert("successfully loaded " + albumsData.length + " albums");
+                document.dispatchEvent(new CustomEvent('syncAlbumUsersSuccess', { detail: { artist_url } }));
+                console.log('syncArtistSuccess event sent');
             } catch (error) {
-                console.error(error);
-                document.dispatchEvent(new CustomEvent('syncArtistError', { detail: { message: error.message, artist_url:artist_url } }));
+                console.error('Error saving albums:', error);
+                window.alert("error loading albums " + error);
+                document.dispatchEvent(new CustomEvent('syncAlbumUsersError', { detail: { message: error.message, artist_url: artist_url } }));
+                console.log('syncArtistError event sent');
             }
         });
-        
 
-        $('#fetchUsers').click(function () {
+
+        $('#fetchUsers').click(async function () {
             try {
                 const albumsData = parseAlbumsData();
-                saveUsersBatch()
-                album_url=getURL()
+                response, users = await saveUsersBatch()
+                album_url = getURL()
+                console.log('Users data saved successfully:', response);
+                window.alert("successfully loaded " + users.length + " users")
                 document.dispatchEvent(new CustomEvent('syncAlbumUsersSuccess', { detail: { album_url } }));
             } catch (error) {
-                console.error(error);
-                document.dispatchEvent(new CustomEvent('syncAlbumUsersError', { detail: { message: error.message, album_url:album_url } }));
+                console.error('Error saving users data:', error);
+                window.alert("error loading users " + error)
+                document.dispatchEvent(new CustomEvent('syncAlbumUsersError', { detail: { message: error.message, album_url: album_url } }));
             }
-        }); 
+        });
     } else {
         console.log('Target element not found. Ensure the page has the correct structure.');
     }
@@ -193,7 +200,7 @@ function parseAlbumsData() {
             const linkElement = item.querySelector('a');
             const bandcamp_url = linkElement ? linkElement.href : '';
 
-            
+
 
             // Add the parsed data to the albumsData array
             albumsData.push({ title, artist, bandcamp_url });
@@ -206,43 +213,43 @@ function parseAlbumsData() {
     return albumsData;
 }
 
-function getURL(){
+function getURL() {
     const currentUrl = window.location.href;
     const artistBandcampUrl = currentUrl.split("/")[2]; // Получаем часть до первого "/"
     const baseUrl = artistBandcampUrl.includes('.com') ? artistBandcampUrl.split('.com')[0] + '.com' : artistBandcampUrl;
     return `https://${baseUrl}`
 }
 
-function saveAlbumsBatch(albumsData) {
-    const currentUrl = getURL()
+async function saveAlbumsBatch(albumsData) {
+    await simulateMouseScroll();
+    const currentUrl = getURL();
 
-    // Формируем данные для отправки
     const dataToSend = {
         albums: albumsData,
         artist_bandcamp_url: currentUrl
     };
 
-    $.ajax({
-        url: 'http://localhost:8092/album/save-batch',
-        type: 'POST',
-        contentType: 'application/json',
-        data: JSON.stringify(dataToSend),
-        success: function (response) {
-            console.log('Albums data saved successfully:', response);
-            window.alert("successfully loaded " + albumsData.length + " albums")
-
-        },
-        error: function (xhr, status, error) {
-            console.error('Error saving albums data:', error);
-            window.alert("error loading labels " + error)
-        }
+    const response = await new Promise((resolve, reject) => {
+        $.ajax({
+            url: 'http://localhost:8092/album/save-batch',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(dataToSend),
+            success: resolve,
+            error: function (xhr, status, error) {
+                reject(error);
+            }
+        });
     });
+
+    return response
 }
 
 
 async function saveUsersBatch() {
-    await clickMoreThumbsUntilDone()
+    await clickMoreThumbsUntilDone();
     const userLinks = document.querySelectorAll('.no-writing .fan.pic');
+    
     // Извлечь информацию каждого поддерживающего и сохранить в массив
     const users = Array.from(userLinks).map(link => {
         const bandcamp_url = link.getAttribute('href');
@@ -255,23 +262,24 @@ async function saveUsersBatch() {
         album_url: window.location.href,
     };
 
-    $.ajax({
-        url: 'http://localhost:8092/users/save-batch',
-        type: 'POST',
-        contentType: 'application/json',
-        data: JSON.stringify(dataToSend),
-        success: function (response) {
-            console.log('Users data saved successfully:', response);
-            window.alert("successfully loaded " + users.length + " users")
-
-        },
-        error: function (xhr, status, error) {
-            console.error('Error saving users data:', error);
-            window.alert("error loading users " + error)
-
-        }
+    // Ожидаем выполнение AJAX-запроса
+    const response = await new Promise((resolve, reject) => {
+        $.ajax({
+            url: 'http://localhost:8092/users/save-batch',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(dataToSend),
+            success: resolve,
+            error: function (xhr, status, error) {
+                console.error('Error saving users data:', error);
+                reject(error);
+            }
+        });
     });
+
+    return response, users
 }
+
 
 async function clickMoreThumbsUntilDone() {
     // Найти кнопку "more..."
@@ -291,8 +299,31 @@ async function clickMoreThumbsUntilDone() {
     }
 
     // Начать процесс
-   await  clickAndCheck();
+    await clickAndCheck();
 }
+
+function simulateMouseScroll() {
+    return new Promise((resolve, reject) => {
+        let lastScrollY = window.scrollY;
+        let sameScrollCount = 0;
+
+        const scrollInterval = setInterval(() => {
+            window.scrollBy({ top: 1000 });
+            if (window.scrollY === lastScrollY) {
+                sameScrollCount++;
+                if (sameScrollCount >= 15) { // Adjust based on your needs
+                    console.log('Scrolling stopped, position unchanged for 15 consecutive checks.');
+                    clearInterval(scrollInterval);
+                    resolve(); // Scrolling finished, resolve the Promise
+                }
+            } else {
+                sameScrollCount = 0; // Reset if we've moved
+            }
+            lastScrollY = window.scrollY;
+        }, 100); // Check every 100ms
+    });
+}
+
 
 
 insertCustomBlock();
