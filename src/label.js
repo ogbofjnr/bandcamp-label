@@ -15,6 +15,11 @@ function insertCustomBlock() {
         console.log('Querying for .artists-bio-pic.artists-bio-pic-uploaded.portrait');
     }
 
+    if (!target){
+        target = document.querySelector('#bio-container');
+        console.log('Querying for bio-container');
+    }
+
     if (target) {
         console.log('Target element found:', target);
 
