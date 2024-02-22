@@ -255,7 +255,7 @@ async function saveUsersBatch() {
     };
 
     $.ajax({
-        url: 'http://localhost:8092/fun-profile/save-batch',
+        url: 'http://localhost:8092/users/save-batch',
         type: 'POST',
         contentType: 'application/json',
         data: JSON.stringify(dataToSend),

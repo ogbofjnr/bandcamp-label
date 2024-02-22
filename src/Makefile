@@ -2,4 +2,4 @@
 .PHONY: zip
 
 zip:
-	zip -r archive.zip ./*
+	rm -rf archive.zip && zip -r archive.zip ./*
