@@ -20,7 +20,7 @@
         "*://*/*"
       ],
       "js": [
-        "libs/jquery-2.1.1.min.js",
+        "jquery-2.1.1.min.js",
         "label.js",
         "user.js"
       ]

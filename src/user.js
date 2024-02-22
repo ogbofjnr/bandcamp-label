@@ -10,9 +10,9 @@ async function clickShowMoreButton() {
         // Если кнопка найдена, нажать на неё
         if (button) {
             button.click();
-         console.log('Found show-more buttons, attempting to click');
-        }else{
-         console.log('Didnt find show more button');
+            console.log('Found show-more buttons, attempting to click');
+        } else {
+            console.log('Didnt find show more button');
 
         }
     });
@@ -67,6 +67,13 @@ async function delay(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
+function getURL() {
+    const currentUrl = window.location.href;
+    const bandcampUrl = currentUrl.split("/")[2]; // Получаем часть до первого "/"
+    const baseUrl = bandcampUrl.includes('.com') ? bandcampUrl.split('.com')[0] + '.com' : bandcampUrl;
+    return `https://${baseUrl}/`
+}
+
 async function loadLabels() {
     try {
         console.log('Starting process...');
@@ -80,8 +87,11 @@ async function loadLabels() {
         const labels = await extractLabelData(); // No need for await unless this function becomes async
         console.log("total labels : " + labels.length);
         await saveArtistsInBulk(labels)
+        const user_url = getURL()
+        document.dispatchEvent(new CustomEvent('syncUserLabelsSuccess', { detail: { user_url } }));
         window.alert("successfully loaded " + labels.length + " labels")
     } catch (error) {
+        document.dispatchEvent(new CustomEvent('syncUserLabelsError', { detail: { message: error.message, user_url: user_url } }));
         window.alert("error loading labels " + error)
     }
 }

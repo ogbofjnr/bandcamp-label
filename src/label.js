@@ -87,13 +87,30 @@ function insertCustomBlock() {
             saveSelectorStates();
         });
         $('#syncAlbumsButton').click(function () {
-            const albumsData = parseAlbumsData();
-            saveAlbumsBatch(albumsData)
-            console.log(albumsData);
+            try {
+                const albumsData = parseAlbumsData();
+                saveAlbumsBatch(albumsData);
+                console.log(albumsData);
+        
+                artist_url=getURL()
+                document.dispatchEvent(new CustomEvent('syncArtistSuccess', { detail: { artist_url } }));
+            } catch (error) {
+                console.error(error);
+                document.dispatchEvent(new CustomEvent('syncArtistError', { detail: { message: error.message, artist_url:artist_url } }));
+            }
         });
+        
 
         $('#fetchUsers').click(function () {
-            saveUsersBatch()
+            try {
+                const albumsData = parseAlbumsData();
+                saveUsersBatch()
+                album_url=getURL()
+                document.dispatchEvent(new CustomEvent('syncAlbumUsersSuccess', { detail: { album_url } }));
+            } catch (error) {
+                console.error(error);
+                document.dispatchEvent(new CustomEvent('syncAlbumUsersError', { detail: { message: error.message, album_url:album_url } }));
+            }
         }); 
     } else {
         console.log('Target element not found. Ensure the page has the correct structure.');
@@ -189,16 +206,20 @@ function parseAlbumsData() {
     return albumsData;
 }
 
-function saveAlbumsBatch(albumsData) {
-    // Получаем текущий URL и обрезаем все после .com
+function getURL(){
     const currentUrl = window.location.href;
     const artistBandcampUrl = currentUrl.split("/")[2]; // Получаем часть до первого "/"
     const baseUrl = artistBandcampUrl.includes('.com') ? artistBandcampUrl.split('.com')[0] + '.com' : artistBandcampUrl;
+    return `https://${baseUrl}/`
+}
+
+function saveAlbumsBatch(albumsData) {
+    const currentUrl = getURL()
 
     // Формируем данные для отправки
     const dataToSend = {
         albums: albumsData,
-        artist_bandcamp_url: `https://${baseUrl}/`
+        artist_bandcamp_url: currentUrl
     };
 
     $.ajax({
