@@ -97,11 +97,11 @@ function insertCustomBlock() {
             saveSelectorStates();
         });
         $('#syncAlbumsButton').click(async function () {
+            artist_url = getURL()
             try {
                 const albumsData = parseAlbumsData();
                 response = await saveAlbumsBatch(albumsData);
                 console.log(albumsData);
-                artist_url = getURL()
                 console.log('Albums data saved successfully:', response);
                 window.alert("successfully loaded " + albumsData.length + " albums");
                 document.dispatchEvent(new CustomEvent('syncAlbumUsersSuccess', { detail: { artist_url } }));
@@ -116,10 +116,10 @@ function insertCustomBlock() {
 
 
         $('#fetchUsers').click(async function () {
+            album_url = window.location.href
             try {
                 const albumsData = parseAlbumsData();
-                response, users = await saveUsersBatch()
-                album_url = getURL()
+                const [response, users] = await saveUsersBatch()
                 console.log('Users data saved successfully:', response);
                 window.alert("successfully loaded " + users.length + " users")
                 document.dispatchEvent(new CustomEvent('syncAlbumUsersSuccess', { detail: { album_url } }));
@@ -287,7 +287,7 @@ async function saveUsersBatch() {
         });
     });
 
-    return response, users
+    return [response, users]
 }
 
 
