@@ -44,6 +44,8 @@ function insertCustomBlock() {
                 <option value="house">House</option>
                 <option value="techHouse">Tech House</option>
                 <option value="melodic">Melodic</option>
+                <option value="electronica">Electronica</option>
+                <option value="experimental">Experimental</option>
                 <option value="other">Other</option>
             </select>
         </div>
